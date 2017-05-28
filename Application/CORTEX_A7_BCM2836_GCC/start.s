@@ -1,8 +1,8 @@
 .extern __bss_start
 .extern __bss_end
 
-//.extern FreeRTOS_IRQ_Handler
-//.extern FreeRTOS_SVC_Handler
+.extern FreeRTOS_SVC_Handler
+.extern FreeRTOS_IRQ_Handler
 .extern main
 
 .section .init
@@ -33,11 +33,11 @@ _start:
 
 _reset_vector:                   .word _reset
 _undefined_instruction_vector:   .word _undefined_instruction
-_software_interrupt_vector:      .word _software_interrupt
+_software_interrupt_vector:      .word FreeRTOS_SVC_Handler
 _prefetch_abort_vector:          .word _prefetch_abort
 _data_abort_vector:              .word _data_abort
 _unused_vector:                  .word _unused
-_interrupt_vector:               .word _interrupt
+_interrupt_vector:               .word FreeRTOS_IRQ_Handler
 _fast_interrupt_vector:          .word _fast_interrupt
 
 _reset:
@@ -96,9 +96,6 @@ _loop:
 _undefined_instruction:
 	b _undefined_instruction
 
-_software_interrupt:
-	b _software_interrupt
-
 _prefetch_abort:
 	b _prefetch_abort
 
@@ -107,9 +104,6 @@ _data_abort:
 
 _unused:
 	b _unused
-
-_interrupt:
-	b _interrupt
 
 _fast_interrupt:
 	b _fast_interrupt
